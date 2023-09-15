@@ -23,3 +23,4 @@ from .BatchNorm1D import *
 from .BatchNorm2D import *
 
 from .RNN import *
+from .GRU import *
