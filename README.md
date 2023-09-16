@@ -158,6 +158,8 @@ print("accuracy: ", np.mean(y_pred == y_true))
 
 ## Range
 
+English:
+
 1. Data types:
     - 32-bit float
     - 64-bit float
@@ -192,6 +194,8 @@ print("accuracy: ", np.mean(y_pred == y_true))
     - DataLoader
 
 
+
+中文：
 
 1. 数据类型：
     - 32位浮点数
