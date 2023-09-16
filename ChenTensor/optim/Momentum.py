@@ -3,7 +3,27 @@ from .._tensor import *
 
 
 class Momentum:
+    """
+    Momentum gradient descent optimizer
+
+    Attributes:
+
+    Methods:
+        __init__(self, paras, lr=0.01, momentum=0.9) : Constructor.
+        step(self) : Update learnable parameters.
+        zero_grad(self) : Clear the parameter gradient to zero.
+    """
     def __init__(self, paras, lr=0.01, momentum=0.9):
+        """
+        Constructor.
+
+        Parameters:
+            paras : list of tensor
+                List of learnable parameters.
+            lr : float or int
+                learning rate.
+            momentum : float or int.
+        """
         if not isinstance(paras, list):
             raise TypeError("The parameter `paras` must be a list of tensor.")
 
@@ -31,9 +51,11 @@ class Momentum:
             self.opts.append(MomentumInt64(paras_int64, lr, momentum))
 
     def step(self):
+        """Update learnable parameters."""
         for opt in self.opts:
             opt.step()
 
     def zero_grad(self):
+        """Clear the parameter gradient to zero."""
         for opt in self.opts:
             opt.zero_grad()

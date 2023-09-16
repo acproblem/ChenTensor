@@ -9,33 +9,60 @@ import numpy as np
 
 
 class RNNBase(Network):
-    def __init__(self, input_size, hidden_size, output_size, bias=True, dropout=0, dtype=Dtype.float32):
+    """
+    This is a RNN network abstract class. All custom RNN network classes must inherit this class.
+    Subclasses need to implement the `forward` method.
+
+    Attributes:
+        input_size : int
+            The number of input's features.
+        hidden_size : int
+            The number of hidden data's features.
+        requires_bias : bool
+            Whether offset item is required.
+
+    Methods:
+        __init__(self, input_size, hidden_size, bias=True, dtype=Dtype.float32) : Constructor.
+    """
+    def __init__(self, input_size, hidden_size, bias=True, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            input_size : int
+                The number of input's features.
+            hidden_size : int
+                The number of hidden data's features.
+            bias : bool
+                Whether offset item is required.
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
-        if type(input_size) is not int or type(hidden_size) is not int or type(output_size) is not int:
-            raise RuntimeError("The parameters `input_size`, `hidden_size` and `output_size` must be `int`.")
+        if type(input_size) is not int or type(hidden_size) is not int:
+            raise RuntimeError("The parameters `input_size` and `hidden_size` must be `int`.")
         if type(bias) is not bool:
             raise RuntimeError("The parameter `bias` must be `bool`.")
-        if not isinstance(dropout, (int, float)):
-            raise RuntimeError("The parameter `dropout` must be `int` or `float`.")
-        if not 0 <= dropout <= 1:
-            raise RuntimeError("The parameter `dropout` must be in [0, 1].")
 
         # 网络信息
         self._input_size = input_size
         self._hidden_size = hidden_size
-        self._output_size = output_size
         self._requires_bias = bias
-        self._dropout = Dropout(dropout) if dropout > 0 else None
         self._dtype = dtype
 
     def forward(self, inputs, hidden):
         """
-        RNNBase forward propagation.
-        :param inputs: shape[batch_size, input_size]
-        :param hidden: shape[batch_size, hidden_size]
-        :return: (output, hidden)
-            output: shape[batch_size, output_size]
-            hidden: shape[batch_size, hidden_size]
+        Forward propagation. Return calculation result.
+
+        Parameters:
+            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+                Input of time t. shape : [batch_size, input_size]
+            hidden : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+                Hidden input of time t. shape : [batch_size, hidden_size]
+
+        Returns:
+            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+                Hidden output of time t. shape : [batch_size, hidden_size]
         """
         pass
 
@@ -43,11 +70,9 @@ class RNNBase(Network):
         return self.forward(inputs, hidden)
 
     def train(self):
-        self._dropout.train()
         self._mode = 'train'
 
     def eval(self):
-        self._dropout.eval()
         self._mode = 'eval'
 
     @property
@@ -59,18 +84,9 @@ class RNNBase(Network):
         return self._hidden_size
 
     @property
-    def output_size(self):
-        return self._output_size
-
-    @property
     def requires_bias(self):
         return self._requires_bias
 
-    @property
-    def dropout(self):
-        return self._dropout.probability if self._dropout is not None else 0
-
     def __str__(self):
         return f"RNNBase(input_size={self.input_size}, hidden_size={self.hidden_size}, " + \
-            f"output_size={self.output_size}, bias={self.requires_bias}, " + \
-            f"dropout={self.dropout}, dtype={self._dtype})"
+            f"bias={self.requires_bias}, dtype={self._dtype})"

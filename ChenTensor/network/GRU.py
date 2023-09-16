@@ -10,8 +10,29 @@ import numpy as np
 
 
 class GRU(RNNBase):
-    def __init__(self, input_size, hidden_size, output_size, bias=True, dropout=0, dtype=Dtype.float32):
-        super().__init__(input_size, hidden_size, output_size, bias, dropout, dtype)
+    """
+    This is GRU cell class that inherit RNNBase.
+
+    Attributes:
+
+    Methods:
+        __init__(self, input_size, hidden_size, activation='tanh', bias=True, dtype=Dtype.float32) : Constructor.
+    """
+    def __init__(self, input_size, hidden_size, bias=True, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            input_size : int
+                The number of input's features.
+            hidden_size : int
+                The number of hidden data's features.
+            bias : bool
+                Whether offset item is required.
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
+        super().__init__(input_size, hidden_size, bias, dtype)
 
         # 激活函数
         self._sigmoid = Sigmoid()
@@ -27,13 +48,11 @@ class GRU(RNNBase):
         self._Wiz = _init_para([input_size, hidden_size])
         self._Whn = _init_para([hidden_size, hidden_size])
         self._Win = _init_para([input_size, hidden_size])
-        self._Who = _init_para([hidden_size, output_size])
         if bias:
             self._br = _init_para(hidden_size)
             self._bz = _init_para(hidden_size)
             self._bhn = _init_para(hidden_size)
             self._bin = _init_para(hidden_size)
-            self._bo = _init_para(output_size)
 
     def forward(self, inputs, hidden):
         r = f.mm(hidden, self._Whr) + f.mm(inputs, self._Wir)
@@ -55,27 +74,18 @@ class GRU(RNNBase):
 
         hidden = (tensor(1) - z) * n + z * hidden
 
-        if self._dropout:
-            hidden = self._dropout(hidden)
-
-        output = f.mm(hidden, self._Who)
-        if self._requires_bias:
-            output = output + self._bo
-        output = self._tanh(output)
-
-        return output, hidden
+        return hidden
 
     def parameters(self):
-        return [self._Whr, self._Wir, self._Whz, self._Wiz, self._Whn, self._Win, self._Who,
-                self._br, self._bz, self._bhn, self._bin, self._bo]
+        return [self._Whr, self._Wir, self._Whz, self._Wiz, self._Whn, self._Win,
+                self._br, self._bz, self._bhn, self._bin]
 
     def type(self):
         return NetType.GRU
 
     def __str__(self):
-        return f"RNN(input_size={self.input_size}, hidden_size={self.hidden_size}, " + \
-            f"output_size={self.output_size}, bias={self.requires_bias}, " + \
-            f"dropout={self.dropout}, dtype={self._dtype})"
+        return f"GRU(input_size={self.input_size}, hidden_size={self.hidden_size}, " + \
+            f"bias={self.requires_bias}, dtype={self._dtype})"
 
 # import ChenTensor as ct
 # from ChenTensor import network

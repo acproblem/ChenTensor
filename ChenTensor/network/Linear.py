@@ -2,7 +2,38 @@ from .network import *
 
 
 class Linear(Network):
+    """
+    This is Linear Layer class that inherit Network.
+
+    Attributes:
+        in_features : int
+            The number of input's features.
+        out_features : int
+            The number of output's features.
+        requires_bias : bool
+            Whether offset item is required.
+        weight : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Weight term.
+        bias : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Bias term.
+
+    Methods:
+        __init__(self, in_features, out_features, bias=True, dtype=Dtype.float32) : Constructor.
+    """
     def __init__(self, in_features, out_features, bias=True, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            in_features : int
+                The number of input's features.
+            out_features : int
+                The number of output's features.
+            bias : bool
+                Whether offset item is required.
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
         if dtype == Dtype.float32:
             self._net = LinearFloat32(in_features, out_features, bias)
@@ -16,6 +47,17 @@ class Linear(Network):
             raise RuntimeError("Please pass correct dtype.")
 
     def forward(self, inputs):
+        """
+        Forward propagation. Return calculation result.
+
+        Parameters:
+            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+                shape : [batch_size, num_features]
+
+        Returns:
+            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+                shape : [batch_size, num_features]
+        """
         return self._net.forward(inputs)
 
     def parameters(self):

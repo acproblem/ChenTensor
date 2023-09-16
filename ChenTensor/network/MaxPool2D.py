@@ -2,7 +2,38 @@ from .network import *
 
 
 class MaxPool2D(Network):
+    """
+    This is Maximum Pooling 2-D Layer class that inherit Network.
+
+    Attributes:
+        kernel_size : tuple or list of int (length = 2)
+            Pooling kernel size.
+        stride : tuple or list of int (length = 2)
+            Pooling kernel step size.
+        padding : tuple or list of int (length = 2)
+            Padding size.
+        dilation : tuple or list of int (length = 2)
+            Dilation size.
+
+    Methods:
+        __init__(self, kernel_size, stride=1, padding=0, dilation=1, dtype=Dtype.float32) : Constructor.
+    """
     def __init__(self, kernel_size, stride=1, padding=0, dilation=1, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            kernel_size : tuple or list of int (length = 2)
+                Pooling kernel size.
+            stride : tuple or list of int (length = 2)
+                Pooling kernel step size.
+            padding : tuple or list of int (length = 2)
+                Padding size.
+            dilation : tuple or list of int (length = 2)
+                Dilation size.
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
 
         # 参数转化
@@ -27,6 +58,17 @@ class MaxPool2D(Network):
             raise RuntimeError("Please pass correct dtype.")
 
     def forward(self, inputs):
+        """
+        Forward propagation. Return calculation result.
+
+        Parameters:
+            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+                shape : [batch_size, in_channels, input_height, input_width]
+
+        Returns:
+            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+                shape : [batch_size, out_channels, output_height, output_width]
+        """
         return self._net.forward(inputs)
 
     def parameters(self):

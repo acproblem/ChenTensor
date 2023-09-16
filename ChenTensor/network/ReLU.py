@@ -1,7 +1,23 @@
 from .network import *
 
 class ReLU(Network):
+    """
+    This is ReLU Layer class that inherit Network.
+        f(x) = x if x >= 0 else 0
+
+    Attributes:
+
+    Methods:
+        __init__(self, dtype=Dtype.float32) : Constructor.
+    """
     def __init__(self, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
         if dtype == Dtype.float32:
             self._net = ReLUFloat32()

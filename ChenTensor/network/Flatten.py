@@ -2,7 +2,31 @@ from .network import *
 
 
 class Flatten(Network):
+    """
+    This is Flatten Layer class that inherit Network.
+    It flattens the data with dimensions within [start_dim, end_dim].
+
+    Attributes:
+        start_dim : int
+            The start dimension.
+        end_dim : int
+            The end dimension.
+
+    Methods:
+        __init__(self, start_dim=1, end_dim=-1, dtype=Dtype.float32) : Constructor.
+    """
     def __init__(self, start_dim=1, end_dim=-1, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            start_dim : int
+                The start dimension.
+            end_dim : int
+                The end dimension.
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
         if dtype == Dtype.float32:
             self._net = FlattenFloat32(start_dim, end_dim)
@@ -16,6 +40,16 @@ class Flatten(Network):
             raise RuntimeError("Please pass correct dtype.")
 
     def forward(self, inputs):
+        """
+        Forward propagation. Return calculation result.
+
+        Parameters:
+            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+
+        Returns:
+            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+                shape : [batch_size, out_features]
+        """
         return self._net.forward(inputs)
 
     def parameters(self):

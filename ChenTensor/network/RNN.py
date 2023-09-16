@@ -10,9 +10,33 @@ import numpy as np
 
 
 class RNN(RNNBase):
-    def __init__(self, input_size, hidden_size, output_size, activation='tanh', bias=True, dropout=0,
-                 dtype=Dtype.float32):
-        super().__init__(input_size, hidden_size, output_size, bias, dropout, dtype)
+    """
+    This is RNN cell class that inherit RNNBase.
+
+    Attributes:
+        activation : str
+            "tanh" or "sigmoid" or "relu".
+
+    Methods:
+        __init__(self, input_size, hidden_size, activation='tanh', bias=True, dtype=Dtype.float32) : Constructor.
+    """
+    def __init__(self, input_size, hidden_size, activation='tanh', bias=True, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            input_size : int
+                The number of input's features.
+            hidden_size : int
+                The number of hidden data's features.
+            activation : str
+                "tanh" or "sigmoid" or "relu".
+            bias : bool
+                Whether offset item is required.
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
+        super().__init__(input_size, hidden_size, bias, dtype)
 
         if activation not in ['tanh', 'relu', 'sigmoid']:
             raise RuntimeError("The parameter `activation` must be one of ['tanh'. 'relu', 'sigmoid'].")
@@ -26,36 +50,19 @@ class RNN(RNNBase):
 
         self._Whh = _init_para([hidden_size, hidden_size])
         self._Wih = _init_para([input_size, hidden_size])
-        self._Who = _init_para([hidden_size, output_size])
         if bias:
             self._bh = _init_para(hidden_size)
-            self._bo = _init_para(output_size)
 
     def forward(self, inputs, hidden):
-        """
-        RNN forward propagation.
-        :param inputs: shape[batch_size, input_size]
-        :param hidden: shape[batch_size, hidden_size]
-        :return: (output, hidden)
-            output: shape[batch_size, output_size]
-            hidden: shape[batch_size, hidden_size]
-        """
         hidden = f.mm(hidden, self._Whh) + f.mm(inputs, self._Wih)
         if self._requires_bias:
             hidden = hidden + self._bh
-        if self._dropout:
-            hidden = self._dropout(hidden)
         hidden = self._activation(hidden)
 
-        output = f.mm(hidden, self._Who)
-        if self._requires_bias:
-            output = output + self._bo
-        output = self._activation(output)
-
-        return output, hidden
+        return hidden
 
     def parameters(self):
-        return [self._Whh, self._Wih, self._Who, self._bh, self._bo]
+        return [self._Whh, self._Wih, self._bh]
 
     def type(self):
         return NetType.RNN
@@ -67,8 +74,7 @@ class RNN(RNNBase):
 
     def __str__(self):
         return f"RNN(input_size={self.input_size}, hidden_size={self.hidden_size}, " + \
-            f"output_size={self.output_size}, activation='{self.activation}', bias={self.requires_bias}, " + \
-            f"dropout={self.dropout}, dtype={self._dtype})"
+            f"activation='{self.activation}', bias={self.requires_bias}, dtype={self._dtype})"
 
 # import ChenTensor as ct
 # from ChenTensor import network
@@ -76,6 +82,6 @@ class RNN(RNNBase):
 #
 # a = ct.tensor(np.arange(20).reshape([4, 5]), dtype=ct.float32)
 # h = ct.tensor(np.arange(24).reshape([4, 6]), dtype=ct.float32)
-# net = network.RNN(5, 6, 3, dropout=0.5)
+# net = network.RNN(5, 6)
 #
 # net(a, h)

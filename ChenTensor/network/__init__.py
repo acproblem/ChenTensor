@@ -24,3 +24,4 @@ from .BatchNorm2D import *
 
 from .RNN import *
 from .GRU import *
+from .LSTM import *

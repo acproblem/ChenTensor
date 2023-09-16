@@ -1,7 +1,23 @@
 from .network import *
 
 class Tanh(Network):
+    """
+    This is Tanh Layer class that inherit Network.
+        f(x) = (exp(x) - exp(-x)) / (exp(x) + exp(-x))
+
+    Attributes:
+
+    Methods:
+        __init__(self, dtype=Dtype.float32) : Constructor.
+    """
     def __init__(self, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
         if dtype == Dtype.float32:
             self._net = TanhFloat32()

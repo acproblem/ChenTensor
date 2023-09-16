@@ -9,9 +9,30 @@ from .Dropout import *
 import numpy as np
 
 
-class GRU(RNNBase):
-    def __init__(self, input_size, hidden_size, output_size, bias=True, dropout=0, dtype=Dtype.float32):
-        super().__init__(input_size, hidden_size, output_size, bias, dropout, dtype)
+class LSTM(RNNBase):
+    """
+    This is GRU cell class that inherit RNNBase.
+
+    Attributes:
+
+    Methods:
+        __init__(self, input_size, hidden_size, activation='tanh', bias=True, dtype=Dtype.float32) : Constructor.
+    """
+    def __init__(self, input_size, hidden_size, bias=True, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            input_size : int
+                The number of input's features.
+            hidden_size : int
+                The number of hidden data's features.
+            bias : bool
+                Whether offset item is required.
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
+        super().__init__(input_size, hidden_size, bias, dtype)
 
         # 激活函数
         self._sigmoid = Sigmoid()
@@ -21,49 +42,44 @@ class GRU(RNNBase):
         def _init_para(shape):  # 初始化参数
             return tensor(np.random.uniform(-np.sqrt(1 / hidden_size), np.sqrt(1 / hidden_size), shape), dtype, True)
 
-        self._Whr = _init_para([hidden_size, hidden_size])
-        self._Wir = _init_para([input_size, hidden_size])
-        self._Whz = _init_para([hidden_size, hidden_size])
-        self._Wiz = _init_para([input_size, hidden_size])
-        self._Whn = _init_para([hidden_size, hidden_size])
-        self._Win = _init_para([input_size, hidden_size])
-        self._Who = _init_para([hidden_size, output_size])
+        self._Whi = _init_para([hidden_size, hidden_size])
+        self._Wii = _init_para([input_size, hidden_size])
+        self._Whf = _init_para([hidden_size, hidden_size])
+        self._Wif = _init_para([input_size, hidden_size])
+        self._Whg = _init_para([hidden_size, hidden_size])
+        self._Wig = _init_para([input_size, hidden_size])
+        self._Who = _init_para([hidden_size, hidden_size])
+        self._Wio = _init_para([input_size, hidden_size])
         if bias:
-            self._br = _init_para(hidden_size)
-            self._bz = _init_para(hidden_size)
-            self._bhn = _init_para(hidden_size)
-            self._bin = _init_para(hidden_size)
-            self._bo = _init_para(output_size)
+            self._bi = _init_para(hidden_size)
+            self._bf = _init_para(hidden_size)
+            self._bg = _init_para(hidden_size)
+            self._bo = _init_para(hidden_size)
 
-    def forward(self, inputs, hidden):
-        r = f.mm(hidden, self._Whr) + f.mm(inputs, self._Wir)
-        z = f.mm(hidden, self._Whz) + f.mm(inputs, self._Wiz)
+    def forward(self, inputs, hidden, c):
+        i = f.mm(hidden, self._Whi) + f.mm(inputs, self._Wii)
+        f_ = f.mm(hidden, self._Whf) + f.mm(inputs, self._Wif)
+        g = f.mm(hidden, self._Whg) + f.mm(inputs, self._Wig)
+        o = f.mm(hidden, self._Who) + f.mm(inputs, self._Wio)
+
         if self._requires_bias:
-            r = r + self._br
-            z = z + self._bz
+            i = i + self._bi
+            f_ = f_ + self._bf
+            g = g + self._bg
+            o = o + self._bo
 
-        r = self._sigmoid(r)
-        z = self._sigmoid(z)
+        i = self._sigmoid(i)
+        f_ = self._sigmoid(f_)
+        g = self._tanh(g)
+        o = self._sigmoid(o)
 
-        n = f.mm(hidden, self._Whn)
-        if self._requires_bias:
-            n = n + self._bhn
-        n = r * n + f.mm(inputs, self._Win)
-        if self._requires_bias:
-            n = n + self._bin
-        n = self._tanh(n)
+        c = f_ * c + i * g
+        hidden = o * self._tanh(c)
 
-        hidden = (tensor(1) - z) * n + z * hidden
+        return hidden, c
 
-        if self._dropout:
-            hidden = self._dropout(hidden)
-
-        output = f.mm(hidden, self._Who)
-        if self._requires_bias:
-            output = output + self._bo
-        output = self._tanh(output)
-
-        return output, hidden
+    def __call__(self, inputs, hidden, c):
+        return self.forward(inputs, hidden, c)
 
     def parameters(self):
         return [self._Whr, self._Wir, self._Whz, self._Wiz, self._Whn, self._Win, self._Who,
@@ -83,6 +99,7 @@ class GRU(RNNBase):
 #
 # a = ct.tensor(np.arange(20).reshape([4, 5]), dtype=ct.float32)
 # h = ct.tensor(np.arange(24).reshape([4, 6]), dtype=ct.float32)
-# net = network.GRU(5, 6, 3, dropout=0.5)
+# c = ct.tensor(np.arange(24).reshape([4, 6]), dtype=ct.float32)
+# net = network.LSTM(5, 6)
 #
-# net(a, h)
+# net(a, h, c)

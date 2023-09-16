@@ -1,7 +1,23 @@
 from .network import *
 
 class Sigmoid(Network):
+    """
+    This is Sigmoid Layer class that inherit Network.
+        f(x) = 1 / (1 + exp(-x))
+
+    Attributes:
+
+    Methods:
+        __init__(self, dtype=Dtype.float32) : Constructor.
+    """
     def __init__(self, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
         if dtype == Dtype.float32:
             self._net = SigmoidFloat32()

@@ -2,7 +2,25 @@ from .network import *
 
 
 class LeakyReLU(Network):
+    """
+    This is LeakyReLU Layer class that inherit Network.
+        f(x) = x if x >= 0 else alpha * x
+
+    Attributes:
+        alpha : int or float
+
+    Methods:
+        __init__(self, alpha=0.01, dtype=Dtype.float32) : Constructor.
+    """
     def __init__(self, alpha=0.01, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            alpha : int or float
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
         if dtype == Dtype.float32:
             self._net = LeakyReLUFloat32(alpha)

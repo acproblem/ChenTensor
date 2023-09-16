@@ -2,7 +2,26 @@ from .network import *
 
 
 class Dropout(Network):
+    """
+    This is Dropout Layer class that inherit Network.
+
+    Attributes:
+        probability : float
+            The dropout probability.
+
+    Methods:
+        __init__(self, p=0.5, dtype=Dtype.float32) : Constructor.
+    """
     def __init__(self, p=0.5, dtype=Dtype.float32):
+        """
+        Constructor.
+
+        Parameters:
+            p : int or float
+                The dropout probability. It must in [0, 1].
+            dtype : ChenTensor.Dtype
+                Data type.
+        """
         super().__init__()
         if dtype == Dtype.float32:
             self._net = DropoutFloat32(p)

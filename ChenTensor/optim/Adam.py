@@ -3,7 +3,29 @@ from .._tensor import *
 
 
 class Adam:
+    """
+    Adam gradient descent optimizer
+
+    Attributes:
+
+    Methods:
+        __init__(self, paras, lr=0.01, beta=(0.9, 0.999), eps=1e-8) : Constructor.
+        step(self) : Update learnable parameters.
+        zero_grad(self) : Clear the parameter gradient to zero.
+    """
     def __init__(self, paras, lr=0.01, beta=(0.9, 0.999), eps=1e-8):
+        """
+        Constructor.
+
+        Parameters:
+            paras : list of tensor
+                List of learnable parameters.
+            lr : float or int
+                learning rate.
+            beta : tuple of float or int (length = 2)
+            eps : float
+                A value for making the denominator not zero.
+        """
         if not isinstance(paras, list):
             raise TypeError("The parameter `paras` must be a list of tensor.")
 
@@ -31,9 +53,11 @@ class Adam:
             self.opts.append(AdamInt64(paras_float32, lr, beta, eps))
 
     def step(self):
+        """Update learnable parameters."""
         for opt in self.opts:
             opt.step()
 
     def zero_grad(self):
+        """Clear the parameter gradient to zero."""
         for opt in self.opts:
             opt.zero_grad()
