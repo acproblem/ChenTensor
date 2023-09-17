@@ -4,9 +4,9 @@ This is a deep learning framework. It uses dynamic graph technology and runs on 
 
 这是一个深度学习框架。它采用动态图技术，在CPU上运行。它使用C++作为底层实现并且提供Python的API。它由6大部分组成：张量模块、数据模块、通用函数模块、损失函数模块、神经网络模块和优化器模块。
 
-For a more detailed understanding of the library, please refer to the documentation.
+For a more detailed understanding of the library, please refer to the documentation (doc/ChenTensor_documentation.md).
 
-若想更加深入了解该库，请查看说明文档。
+若想更加深入了解该库，请查看说明文档 (doc/ChenTensor_documentation.md)。
 
 ## Setup
 
