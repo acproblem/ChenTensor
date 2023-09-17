@@ -55,13 +55,13 @@ class RNNBase(Network):
         Forward propagation. Return calculation result.
 
         Parameters:
-            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            inputs : Tensor
                 Input of time t. shape : [batch_size, input_size]
-            hidden : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            hidden : Tensor
                 Hidden input of time t. shape : [batch_size, hidden_size]
 
         Returns:
-            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Tensor
                 Hidden output of time t. shape : [batch_size, hidden_size]
         """
         pass

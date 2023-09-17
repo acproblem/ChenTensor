@@ -62,11 +62,11 @@ class MaxPool2D(Network):
         Forward propagation. Return calculation result.
 
         Parameters:
-            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            inputs : Tensor
                 shape : [batch_size, in_channels, input_height, input_width]
 
         Returns:
-            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Tensor
                 shape : [batch_size, out_channels, output_height, output_width]
         """
         return self._net.forward(inputs)

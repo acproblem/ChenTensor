@@ -44,10 +44,10 @@ class Flatten(Network):
         Forward propagation. Return calculation result.
 
         Parameters:
-            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            inputs : Tensor
 
         Returns:
-            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Tensor
                 shape : [batch_size, out_features]
         """
         return self._net.forward(inputs)

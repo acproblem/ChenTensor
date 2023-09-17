@@ -48,11 +48,11 @@ class BatchNorm1D(Network):
         Forward propagation. Return calculation result.
 
         Parameters:
-            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            inputs : Tensor
                 shape : [batch_size, num_features]
 
         Returns:
-            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Tensor
                 shape : [batch_size, num_features]
         """
         return self._net.forward(inputs) if self.mode == "train" else self._net.eval_forward(inputs)

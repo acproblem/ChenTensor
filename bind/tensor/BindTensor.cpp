@@ -1,6 +1,6 @@
 //
 // Created by Lenovo on 2023/8/29.
-// 绑定 _tensor 到 python。
+// 绑定 tensor 到 python。
 //
 
 #include "tensor/Tensor.h"
@@ -26,10 +26,10 @@ enum class Dtype {
 /// 这里包括 + - * / 运算符。
 template<typename TL, typename TR>
 void bind1_part(py::class_<Tensor<TL>> &c) {
-    c.def("__add__", operator+ < TL, TR > , "Add two tensors.", py::arg("_tensor"))
-            .def("__sub__", operator- < TL, TR > , "Subtract two tensors.", py::arg("_tensor"))
-            .def("__mul__", operator* < TL, TR > , "Multiply two tensors.", py::arg("_tensor"))
-            .def("__truediv__", operator/ < TL, TR > , "Divide two tensors.", py::arg("_tensor"));
+    c.def("__add__", operator+ < TL, TR > , "Add two tensors.", py::arg("tensor"))
+            .def("__sub__", operator- < TL, TR > , "Subtract two tensors.", py::arg("tensor"))
+            .def("__mul__", operator* < TL, TR > , "Multiply two tensors.", py::arg("tensor"))
+            .def("__truediv__", operator/ < TL, TR > , "Divide two tensors.", py::arg("tensor"));
 }
 
 /// 绑定 Tensor<T> 到 Python。
@@ -37,12 +37,12 @@ template<typename T>
 void bind1(py::class_<Tensor<T>> &c, const char *className) {
 
 
-    c.def(py::init([]() { return Tensor<T>(); }), "Create a default _tensor.");
+    c.def(py::init([]() { return Tensor<T>(); }), "Create a default tensor.");
     c.def(py::init([](const xt::pyarray<T> &data) { return Tensor<T>(data); }),
-          "Create a _tensor for specified data.", py::arg("data"));
+          "Create a tensor for specified data.", py::arg("data"));
     c.def(py::init([](const xt::pyarray<T> &data, bool requires_grad) {
               return Tensor<T>(data, requires_grad);
-          }), "Create a _tensor for specified data and specified differentiability.", py::arg("data"),
+          }), "Create a tensor for specified data and specified differentiability.", py::arg("data"),
           py::arg("requires_grad"));
 
     c.def_property("data", [](const Tensor<T> &t) { return xt::pyarray<T>(t.data()); },
@@ -57,8 +57,8 @@ void bind1(py::class_<Tensor<T>> &c, const char *className) {
             });
 
     c.def("backward", &Tensor<T>::backward, "Solving the Gradient of Dynamic Graphs.")
-            .def("shape", &Tensor<T>::shape, "Get shape of _tensor.")
-            .def("reshape", &Tensor<T>::reshape, "Change shape of _tensor.", py::arg("shape"));
+            .def("shape", &Tensor<T>::shape, "Get shape of tensor.")
+            .def("reshape", &Tensor<T>::reshape, "Change shape of tensor.", py::arg("shape"));
 
     c.def("__getitem__", &Tensor<T>::get, "Return one of sample.", py::arg("idx"));
 
@@ -86,12 +86,12 @@ PYBIND11_MODULE(_tensor, m) {
             .export_values();
 
 //    py::class_<Tensor<float>>(m, "TensorFloat32")
-//            .def(py::init([]() { return Tensor<float>(); }), "Create a default _tensor.")
+//            .def(py::init([]() { return Tensor<float>(); }), "Create a default tensor.")
 //            .def(py::init([](const xt::pyarray<float> &data) { return Tensor<float>(data); }),
-//                 "Create a _tensor for specified data.", py::arg("data"))
+//                 "Create a tensor for specified data.", py::arg("data"))
 //            .def(py::init([](const xt::pyarray<float> &data, bool requires_grad) {
 //                     return Tensor<float>(data, requires_grad);
-//                 }), "Create a _tensor for specified data and specified differentiability.", py::arg("data"),
+//                 }), "Create a tensor for specified data and specified differentiability.", py::arg("data"),
 //                 py::arg("requires_grad"))
 //            .def_property("data", [](const Tensor<float> &t) { return xt::pyarray<float>(t.data()); },
 //                          [](Tensor<float> &t, const xt::pyarray<float> &data) { t.data() = data; })
@@ -104,14 +104,14 @@ PYBIND11_MODULE(_tensor, m) {
 //                return out.str();
 //            })
 //            .def("backward", &Tensor<float>::backward, "Solving the Gradient of Dynamic Graphs.")
-//            .def("shape", &Tensor<float>::shape, "Get shape of _tensor.")
-//            .def("reshape", &Tensor<float>::reshape, "Change shape of _tensor.", py::arg("shape"))
+//            .def("shape", &Tensor<float>::shape, "Get shape of tensor.")
+//            .def("reshape", &Tensor<float>::reshape, "Change shape of tensor.", py::arg("shape"))
 //            .def("__pos__", &operator+ < float > , "Positive operation.")
 //            .def("__neg__", &operator- < float > , "Negative operation.")
-//            .def("__add__", operator+ < float, float > , "Add two tensors.", py::arg("_tensor"))
-//            .def("__sub__", operator- < float, float > , "Subtract two tensors.", py::arg("_tensor"))
-//            .def("__mul__", operator* < float, float > , "Multiply two tensors.", py::arg("_tensor"))
-//            .def("__truediv__", operator/ < float, float > , "Divide two tensors.", py::arg("_tensor"));
+//            .def("__add__", operator+ < float, float > , "Add two tensors.", py::arg("tensor"))
+//            .def("__sub__", operator- < float, float > , "Subtract two tensors.", py::arg("tensor"))
+//            .def("__mul__", operator* < float, float > , "Multiply two tensors.", py::arg("tensor"))
+//            .def("__truediv__", operator/ < float, float > , "Divide two tensors.", py::arg("tensor"));
 
     py::class_<Tensor<int32_t>> c1(m, "TensorInt32");
     c1.def_property_readonly("dtype", [](const Tensor<int32_t> &t) { return Dtype::_INT32; });

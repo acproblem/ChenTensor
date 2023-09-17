@@ -22,6 +22,8 @@ void bind1(py::module_ &m) {
     m.def("exp", static_cast<Tensor<T> (*)(const Tensor<T> &)>(&exp<T>), "Exponential function.", py::arg("tensor"));
     m.def("log", static_cast<Tensor<T> (*)(const Tensor<T> &)>(&log<T>), "Logarithmic function based on `e`.",
           py::arg("tensor"));
+    m.def("sqrt", static_cast<Tensor<T> (*)(const Tensor<T> &)>(&sqrt<T>), "Sqrt function.", py::arg("tensor"));
+
     m.def("transpose", &transpose<T>, "Transpose a tensor.", py::arg("tensor"),
           py::arg("permutation") = std::vector<size_t>());
 

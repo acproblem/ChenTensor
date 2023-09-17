@@ -22,9 +22,9 @@ class Conv2D(Network):
             Padding value.
         requires_bias : bool
             Whether offset item is required.
-        weight : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+        weight : Tensor
             Convolutional kernel. shape : [out_channels, in_channels, kernel_size[0], kernel_size[1]]
-        bias : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+        bias : Tensor
             Bias term. shape : [out_channels]
 
     Methods:
@@ -88,11 +88,11 @@ class Conv2D(Network):
         Forward propagation. Return calculation result.
 
         Parameters:
-            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            inputs : Tensor
                 shape : [batch_size, in_channels, input_height, input_width]
 
         Returns:
-            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Tensor
                 shape : [batch_size, out_channels, output_height, output_width]
         """
         return self._net.forward(inputs)

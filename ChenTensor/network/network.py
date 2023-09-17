@@ -13,7 +13,7 @@ class Network:
     Methods:
         __init__(self) : Constructor.
         forward(self, inputs) : Forward propagation. Return calculation result.
-        __call__(self, inputs : Equivalent to the `forward` method.
+        __call__(self, inputs) : Equivalent to the `forward` method.
         parameters(self) : Get learnable parameters. Subclasses can override it.
         type(self) : Get type of network.
         __str__(self) : Return a description for object.
@@ -35,10 +35,10 @@ class Network:
         Forward propagation. Return calculation result.
 
         Parameters:
-            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            inputs : Tensor
 
         Returns:
-            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Tensor
         """
         pass
 
@@ -61,7 +61,7 @@ class Network:
         """Equivalent to the `forward` method."""
         return self.forward(inputs)
 
-    def type(self, inputs):
+    def type(self):
         """Get type of network."""
         return NetType.Undefined
 

@@ -12,9 +12,9 @@ class Linear(Network):
             The number of output's features.
         requires_bias : bool
             Whether offset item is required.
-        weight : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+        weight : Tensor
             Weight term.
-        bias : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+        bias : Tensor
             Bias term.
 
     Methods:
@@ -51,11 +51,11 @@ class Linear(Network):
         Forward propagation. Return calculation result.
 
         Parameters:
-            inputs : tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            inputs : Tensor
                 shape : [batch_size, num_features]
 
         Returns:
-            tensor (TensorFloat32 or TensorFloat64 or TensorInt32 or TensorInt64)
+            Tensor
                 shape : [batch_size, num_features]
         """
         return self._net.forward(inputs)
